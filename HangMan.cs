@@ -8,21 +8,23 @@ namespace HangMan_Sample
 {
     class HangMan_Sample
     {
-        static int playerStartingPoints;
+        static int playerStartingPoints; // Starting points of Player are 90
 
-        static List<string> alreadySguestedLetters;
+        static List<string> alreadySguestedLetters; // Array in which all of the guessed letters are saved
 
-        static bool[] revealedLettersPosition;
+        static bool[] revealedLettersPosition; // Bool massive which reveals or not exact letters from guessWord
 
-        static string guessWord;
+        static List<string> wordsDictionary; // Dictionary with words to guess from (words can be changed if needed)
 
-        static string sugestion;
+        static string guessWord; // Word that should be guessed (it is taken from wordsDictionary)
 
-        static string gameStatus;
+        static string sugestion; // Exactly one letter taken from user with Console.ReadLine(); method
 
-        static bool consist;
+        static string gameStatus; // Game status has three values 1.Play, 2.YOU LOST, 3.YOU WIN (which determines game states)
 
-        static bool validInput;
+        static bool consist; // Bool variable which is used to determine if letter from user is consisted in guessWord or not
+
+        static bool validInput; // Validates user input (exactly one letter should be typed)
 
         /// <summary>
         /// Main method all the logic is initialized here
@@ -97,13 +99,13 @@ namespace HangMan_Sample
 
         private static string GetWordFromDictionary()
         {
-            List<string> words = new List<string>() { "REVOLVER", "HOME", "WINDOW", "CAT", "DOG", "TOWN" };
+            wordsDictionary = new List<string>() { "REVOLVER", "HOME", "WINDOW", "CAT", "DOG", "TOWN" };
 
             Random number = new Random();
 
-            int random = number.Next(0, words.Count);
+            int random = number.Next(0, wordsDictionary.Count);
 
-            return words[random];
+            return wordsDictionary[random];
         }
 
         /// <summary>
@@ -160,7 +162,7 @@ namespace HangMan_Sample
                     {
                         consist = true;
 
-                        revealedLettersPosition[i] = true;
+                        revealedLettersPosition[i] = true; // exact member of the array is asigned with true.
                     }
                 }
             }
@@ -170,6 +172,10 @@ namespace HangMan_Sample
 
         /// <summary>
         /// Method that counts player points
+        /// If sugested letter IS NOT consisted in the given word to guess(guessWord)
+        /// the points of player are DECREASED with 10 points
+        /// If sugested letter IS consisted in the given word to guess(guessWord)
+        /// the points of player are INCREASED with 10 points
         /// </summary>
 
         private static int? PlayerPoints(bool consist)
@@ -266,6 +272,7 @@ namespace HangMan_Sample
 
         /// <summary>
         /// Method that initialize bool massive coresponding to the exact guessWord Lenght.
+        /// All the members of the array are initialy asigned with false.
         /// </summary>
 
         private static void RevealedLettersPosition(string guessWord)
@@ -292,7 +299,7 @@ namespace HangMan_Sample
             {
                 Printer(0, 18, "New Game(N) or Close(C) N/C: ", ConsoleColor.Gray);
 
-                string comand = Console.ReadLine().ToUpper();
+                string comand = Console.ReadLine().ToUpper(); // reading user comand 
 
                 if (comand != "N" && comand != "C")
                 {
@@ -307,7 +314,7 @@ namespace HangMan_Sample
 
                 else
                 {
-                    if (comand == "N")
+                    if (comand == "N") // user comand for starting new game (Application Restart)
                     {
                         Console.Clear();
 
@@ -318,7 +325,7 @@ namespace HangMan_Sample
                         Main();
                     }
 
-                    else if (comand == "C")
+                    else if (comand == "C") // user comand for closing the application
                     {
                         Console.Clear();
 
