@@ -8,15 +8,13 @@ namespace HangMan_Sample
 {
     class HangMan_Sample
     {
-        // Global variables of data
+        static int playerStartingPoints;
 
-        static int playerStartingPoints = 90;
+        static List<string> alreadySguestedLetters;
 
-        static List<string> alreadySguestedLetters = new List<string>() { };
+        static bool[] revealedLettersPosition;
 
-        static bool[] revealedLettersPosition = new bool[1];
-
-        static string guessWord = GetWordFromDictionary();
+        static string guessWord;
 
         static string sugestion;
 
@@ -30,12 +28,20 @@ namespace HangMan_Sample
         /// Main method all the logic is initialized here
         /// </summary>
 
-        private static void Main(string[] args)
+        private static void Main()
         {
             Console.Title = "Hang Man";
 
             Console.BufferHeight = Console.WindowHeight = 20;
             Console.BufferWidth = Console.WindowWidth = 60;
+
+            playerStartingPoints = 90; 
+
+            alreadySguestedLetters = new List<string>() { };
+
+            revealedLettersPosition = new bool[1];
+
+            guessWord = GetWordFromDictionary();
 
             while (true)
             {
@@ -58,6 +64,8 @@ namespace HangMan_Sample
                 HideOrShowGuessWord(guessWord);
 
                 Printer(5, 7, "SUGEST LETTER: ", ConsoleColor.Gray);
+
+                StartNewGameOrClose(gameStatus);
 
                 sugestion = Console.ReadLine();
 
@@ -106,7 +114,7 @@ namespace HangMan_Sample
         {
             if (validInput == true && gameStatus == "Play")
             {
-                alreadySguestedLetters.Add(sugestion);
+                alreadySguestedLetters.Add(sugestion.ToUpper());
             }
 
             for (int i = 1; i <= alreadySguestedLetters.Count; i++)
@@ -269,6 +277,57 @@ namespace HangMan_Sample
                 for (int i = 0; i < revealedLettersPosition.Length; i++)
                 {
                     revealedLettersPosition[i] = false;
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// Method that according to user comand restarts or closes the application
+        /// </summary>
+
+        private static void StartNewGameOrClose(string gameStatus)
+        {
+            if (gameStatus == "YOU LOST" || gameStatus == "YOU WIN")
+            {
+                Printer(0, 18, "New Game(N) or Close(C) N/C: ", ConsoleColor.Gray);
+
+                string comand = Console.ReadLine().ToUpper();
+
+                if (comand != "N" && comand != "C")
+                {
+                    Printer(29, 18, "Please type 'N' or 'C'", ConsoleColor.Red);
+
+                    Thread.Sleep(3000);
+
+                    Printer(29, 18, "                      ", ConsoleColor.Gray);
+
+                    StartNewGameOrClose(gameStatus);
+                }
+
+                else
+                {
+                    if (comand == "N")
+                    {
+                        Console.Clear();
+
+                        Printer(5, 5, "STARTING NEW GAME...", ConsoleColor.Gray);
+
+                        Thread.Sleep(3000);
+                        
+                        Main();
+                    }
+
+                    else if (comand == "C")
+                    {
+                        Console.Clear();
+
+                        Printer(5, 5, "PROGRAM IS CLOSING...", ConsoleColor.Gray);
+
+                        Thread.Sleep(3000);
+
+                        Environment.Exit(0);
+                    }
                 }
             }
 
