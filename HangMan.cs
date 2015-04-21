@@ -49,7 +49,7 @@ namespace HangMan_Sample
             {
                 Console.Clear();
 
-                Printer(0, 0, "Already guested letters: ", ConsoleColor.Gray);
+                Printer(0, 0, "Already guessed letters: ", ConsoleColor.Gray);
 
                 AddSugestionToAlreadyGuestedLetters(sugestion);
 
