@@ -8,6 +8,8 @@ namespace HangMan_Sample
 {
     class HangMan_Sample
     {
+        //Global variables for the program logic
+        
         static int playerStartingPoints; // Starting points of Player are 90
 
         static List<string> alreadySguestedLetters; // Array in which all of the guessed letters are saved
@@ -25,6 +27,8 @@ namespace HangMan_Sample
         static bool consist; // Bool variable which is used to determine if letter from user is consisted in guessWord or not
 
         static bool validInput; // Validates user input - exactly one letter should be typed
+
+        static int wrongGuesses; // Counts how many wrong guesses the user is made
 
         /// <summary>
         /// Main method all the logic is initialized here
@@ -45,10 +49,10 @@ namespace HangMan_Sample
 
             guessWord = GetWordFromDictionary();
 
+            wrongGuesses = 0;
+
             while (true)
             {
-                Console.Clear();
-
                 Printer(0, 0, "Already guessed letters: ", ConsoleColor.Gray);
 
                 AddSugestionToAlreadyGuestedLetters(sugestion);
@@ -67,6 +71,8 @@ namespace HangMan_Sample
 
                 Printer(5, 7, "SUGEST LETTER: ", ConsoleColor.Gray);
 
+                DrawTheRopes();
+
                 StartNewGameOrClose(gameStatus);
 
                 sugestion = Console.ReadLine();
@@ -78,6 +84,8 @@ namespace HangMan_Sample
                 PlayerPoints(consist);
 
                 Thread.Sleep(250);
+
+                ConsoleCleaner();
             }
         }
 
@@ -167,6 +175,11 @@ namespace HangMan_Sample
                 }
             }
 
+            if (consist == false && validInput == true)
+            {
+                wrongGuesses++;
+            }
+
             return consist;
         }
 
@@ -178,7 +191,7 @@ namespace HangMan_Sample
         /// the points of player are INCREASED with 10 points
         /// </summary>
 
-        private static int? PlayerPoints(bool consist)
+        private static int PlayerPoints(bool consist)
         {
             if (consist == false && validInput == true && gameStatus == "Play")
             {
@@ -194,7 +207,7 @@ namespace HangMan_Sample
         }
 
         /// <summary>
-        /// Method that checks winnig or losing conditions
+        /// Method that checks winnig or losing conditions 
         /// </summary>
 
         private static void CheckIfPlayerWinsOrLoose(int playerStartingPoints)
@@ -206,7 +219,7 @@ namespace HangMan_Sample
                 Printer(13, 2, gameStatus, ConsoleColor.Yellow);
             }
 
-            if (playerStartingPoints == 0)
+            if (playerStartingPoints == 0 || wrongGuesses == 9)
             {
                 gameStatus = "YOU LOST";
 
@@ -257,7 +270,7 @@ namespace HangMan_Sample
                 validInput = false;
             }
 
-            else if (alreadySguestedLetters.Contains(sugestion)) //Check if input is not already used
+            else if (alreadySguestedLetters.Contains(sugestion.ToUpper())) //Check if input is not already used
             {
                 Printer(20, 7, "This letter is already used", ConsoleColor.Red);
 
@@ -335,6 +348,107 @@ namespace HangMan_Sample
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Method that clears exact rows of the console (not whole console as Console.Clear() method)
+        /// Clears rows from 1 to 8. 
+        /// Row 0 is for revealed letters
+        /// Rows below 8 are for Ropes Drawing
+        /// </summary>
+
+        private static void ConsoleCleaner()
+        {
+            for (int row = 1; row <= 8; row++)
+            {
+                for (int col = 0; col <= 58; col++)
+                {
+                    Printer(col, row, " ", ConsoleColor.Gray);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Method that draws the Ropes and Hanging Man. depending on points and wrong sugested letters
+        /// (depending on user right or wrong guesses.)
+        /// </summary>
+
+        private static void DrawTheRopes()
+        {
+            if (validInput == true && consist == false)
+            {
+                switch (wrongGuesses)
+                {
+                    //Ropes part 1
+                    case 1:
+                        Printer(40, 17, "__", ConsoleColor.Gray);
+                        Printer(43, 17, "__", ConsoleColor.Gray);
+                        Printer(42, 17, "|", ConsoleColor.Gray);
+                        Console.Beep(523, 200);
+                        break;
+                    //Ropes part 2
+                    case 2:
+                        Printer(42, 16, "|", ConsoleColor.Gray);
+                        Printer(42, 15, "|", ConsoleColor.Gray);
+                        Printer(42, 14, "|", ConsoleColor.Gray);
+                        Printer(42, 13, "|", ConsoleColor.Gray);
+                        Console.Beep(523, 200);
+                        break;
+                    //Ropes part 3
+                    case 3:
+                        Printer(42, 10, "|", ConsoleColor.Gray);
+                        Printer(42, 11, "|", ConsoleColor.Gray);
+                        Printer(42, 12, "|", ConsoleColor.Gray);
+                        Console.Beep(523, 200);
+                        break;
+                    //Ropes part 4
+                    case 4:
+                        Printer(43, 9, "__", ConsoleColor.Gray);
+                        Printer(44, 9, "__", ConsoleColor.Gray);
+                        Printer(45, 9, "__", ConsoleColor.Gray);
+                        Printer(46, 9, "__", ConsoleColor.Gray);
+                        Console.Beep(523, 200);
+                        break;
+                    //Ropes part 5 + Head
+                    case 5:
+                        Printer(47, 9, "__", ConsoleColor.Gray);
+                        Printer(49, 10, "|", ConsoleColor.Gray);
+                        Printer(49, 11, "0", ConsoleColor.Red);
+                        Console.Beep(523, 200);
+                        break;
+                    //Middle Body
+                    case 6:
+                        Printer(49, 12, "|", ConsoleColor.Red);
+                        Console.Beep(523, 200);
+                        break;
+                    //Hands
+                    case 7:
+                        Printer(48, 12, "\\", ConsoleColor.Red);
+                        Printer(50, 12, "/", ConsoleColor.Red);
+                        Console.Beep(523, 200);
+                        break;
+                    //Lower Body
+                    case 8:
+                        Printer(49, 13, "|", ConsoleColor.Red);
+                        Console.Beep(523, 200);
+                        break;
+                    //Feet
+                    case 9:
+                        Printer(48, 14, "/", ConsoleColor.Red);
+                        Printer(50, 14, "\\", ConsoleColor.Red);
+                        Console.Beep(523, 200);
+                        Thread.Sleep(250);
+                        Console.Beep(523, 200);
+                        Thread.Sleep(250);
+                        Console.Beep(523, 200);
+                        break;
+                    default:
+                        break;
+                }
+
+                Console.SetCursorPosition(20, 7);
+            }
+            
         }
     }
 }
